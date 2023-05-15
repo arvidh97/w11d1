@@ -9,7 +9,7 @@ function Form(props) {
     const [phoneType, setPhoneType] = useState();
     const [staff, setStaff] = useState("");
     const [bio, setBio] = useState("");
-    const [emailNotifs, setEmailNotifs] = useState();
+    const [emailNotifs, setEmailNotifs] = useState(false);
 
     const [errorMessages, setErrorMessages] = useState([]);
 
@@ -20,11 +20,11 @@ function Form(props) {
             errors.push("Name cannot be blank.")
         };
 
-        if (!email.length || email.split('@').length != 2) {
+        if (!email.length || email.split('@').length !== 2) {
             errors.push("Invalid email.")
         }
 
-        if (phoneNumber && phoneNumber.length != 10) {
+        if (phoneNumber && phoneNumber.length !== 10) {
             errors.push('please provide 10-digit phone number.')
         }
 
@@ -61,8 +61,10 @@ function Form(props) {
             setBio(e.target.value);
             break;
           case "emailNotifs":
-            setEmailNotifs(e.target.value);
+            setEmailNotifs(prevNotif => !prevNotif);
             break;
+          default:
+            break
         }
       }
     }
@@ -144,11 +146,11 @@ function Form(props) {
                 <br />
 
                 <label>Email Notifications?
-                  <input type="checkbox" value={emailNotifs} onChange={handleChange('emailNotifs')}/>
+                  <input type="checkbox" onChange={handleChange('emailNotifs')}/>
                 </label>
                 <br />
 
-                <button>Sign Up!</button>
+                <button type='submit'>Sign Up!</button>
             </form>
         </>
     )
