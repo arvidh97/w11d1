@@ -11,7 +11,33 @@ function Form(props) {
     const [bio, setBio] = useState("");
     const [emailNotifs, setEmailNotifs] = useState();
 
-    // const [errorMessages, setErrorMessages] = useState([]);
+    const [errorMessages, setErrorMessages] = useState([]);
+
+    const validate = () => {
+        let errors = [];
+
+        if (!fullName.length) {
+            errors.push("Name cannot be blank.")
+        };
+
+        if (!email.length || email.split('@').length != 2) {
+            errors.push("Invalid email.")
+        }
+
+        if (phoneNumber && phoneNumber.length != 10) {
+            errors.push('please provide 10-digit phone number.')
+        }
+
+        if (phoneNumber && !phoneType) {
+            errors.push('please select phone type.')
+        }
+
+        if (bio.length > 280) {
+            errors.push('bio must be shorter than 280 characters.')
+        }
+
+        return errors;
+    }
 
     const handleChange = field => {
       return (e) => {
@@ -25,14 +51,60 @@ function Form(props) {
           case "phoneNumber":
             setPhoneNumber(e.target.value);
             break;
+          case "phoneType":
+            setPhoneType(e.target.value);
+            break;
+          case "staff":
+            setStaff(e.target.value);
+            break;
+          case "bio":
+            setBio(e.target.value);
+            break;
+          case "emailNotifs":
+            setEmailNotifs(e.target.value);
+            break;
         }
       }
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        let errors = validate();
+
+        if (errors.length > 0) {
+            setErrorMessages(errors);
+        } else {
+            let user = {
+                fullName,
+                email,
+                phoneNumber,
+                phoneType,
+                staff,
+                bio,
+                emailNotifs
+            }
+            console.log(user);
+        }
+    };
+
+    const showErrors = () => {
+        if (!errorMessages.length) {
+            return null;
+        } else {
+            return (
+                <ul>
+                    {errorMessages.map((error, i) => <li key={i}>{error}</li>)}
+                </ul>
+            )
+        }
+    };
+
 
     return (
         <>
-            <form className="form" >
+        {showErrors()}
+            <form className="form" onSubmit={handleSubmit}>
                 <input type="text" placeholder="Full Name" value={fullName} onChange={handleChange("fullName")}/>
                 <br />
 
@@ -41,8 +113,10 @@ function Form(props) {
 
                 <input type="text" placeholder="Phone Number" value={phoneNumber} onChange={handleChange("phoneNumber")}/>
                 <br />
+                <br />
                 
                 <label>Phone Type
+                    <br />
                   <select className="phoneDropdown" value={phoneType} onChange={handleChange("phoneType")}>
                     <option value="home">Home</option>
                     <option value="work">Work</option>
@@ -50,14 +124,21 @@ function Form(props) {
                   </select>
                 </label>
                 <br />
-
-                <label>Staff?
-                <input type="radio" name="Instructor" value={staff} onChange={handleChange('staff')}/>
-                <input type="radio" name="Student" value={staff} onChange={handleChange('staff')}/>
-                </label>
+                <br />
+                
+                <div id="staff-radio">
+                  <label>Staff?
+                    <br />
+                      <input id="instructor" type="radio" name="staff" value="instructor" onChange={handleChange('staff')}/>
+                      <label htmlFor="instructor">Instructor</label>
+                      <input id="student" type="radio" name="staff" value="student" onChange={handleChange('staff')}/>
+                      <label htmlFor="student">Student</label>
+                  </label>
+                </div>
                 <br />
 
-                <label>Bio
+                <label>Bio:
+                    <br />
                   <textarea value={bio} onChange={handleChange("bio")} />
                 </label>
                 <br />
@@ -65,6 +146,7 @@ function Form(props) {
                 <label>Email Notifications?
                   <input type="checkbox" value={emailNotifs} onChange={handleChange('emailNotifs')}/>
                 </label>
+                <br />
 
                 <button>Sign Up!</button>
             </form>
