@@ -3,11 +3,36 @@ import {useState} from 'react';
 
 function Form(props) {
 
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [phoneType, setPhoneType] = useState();
+    const [staff, setStaff] = useState("");
+    const [bio, setBio] = useState("");
+    const [emailNotifs, setEmailNotifs] = useState();
+
+    // const [errorMessages, setErrorMessages] = useState([]);
+
+    const handleChange = field => {
+      return (e) => {
+        switch (field) {
+          case "fullName":
+            setFullName(e.target.value);
+            break;
+          case "email":
+            setEmail(e.target.value);
+            break;
+          case "phoneNumber":
+            setPhoneNumber(e.target.value);
+            break;
+        }
+      }
+    }
 
 
     return (
         <>
-            <form className="form" onSubmit={handleSubmit}>
+            <form className="form" >
                 <input type="text" placeholder="Full Name" value={fullName} onChange={handleChange("fullName")}/>
                 <br />
 
@@ -18,7 +43,7 @@ function Form(props) {
                 <br />
                 
                 <label>Phone Type
-                  <select className="phoneDropdown">
+                  <select className="phoneDropdown" value={phoneType} onChange={handleChange("phoneType")}>
                     <option value="home">Home</option>
                     <option value="work">Work</option>
                     <option value="mobile">Mobile</option>
@@ -26,8 +51,10 @@ function Form(props) {
                 </label>
                 <br />
 
-                <input type="radio" name="Instructor" value={instructor}/>
-                <input type="radio" name="Student" value={student}/>
+                <label>Staff?
+                <input type="radio" name="Instructor" value={staff} onChange={handleChange('staff')}/>
+                <input type="radio" name="Student" value={staff} onChange={handleChange('staff')}/>
+                </label>
                 <br />
 
                 <label>Bio
@@ -36,7 +63,7 @@ function Form(props) {
                 <br />
 
                 <label>Email Notifications?
-                  <input type="checkbox" value={emailNotifs} />
+                  <input type="checkbox" value={emailNotifs} onChange={handleChange('emailNotifs')}/>
                 </label>
 
                 <button>Sign Up!</button>
